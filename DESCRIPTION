@@ -1,0 +1,19 @@
+Package: RegToMeanExample
+Title: Visualisation Regression to the Mean
+Version: 0.0.0.9000
+Authors@R: 
+    person("Andre", "Meichtry", , "mcdr@zhaw.ch", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Illustrates that placebo effects can be interpreted as statistical phenomenon. Plots Baseline versus Follow-up for diastolic blood pressure (DBP) in a pre-post study. No change between Baseline and follow-up. Apparent change for hypertensive at baseline people. See also: Senn, S. (2009) Three things that every medical writer should know about statistics. The Write Stuff, 18 (3). pp. 159-162. ISSN 1854-8466.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: MASS, psych
+VignetteBuilder: knitr
+Suggests: rmarkdown, knitr
+NeedsCompilation: no
+Packaged: 2021-10-20 07:13:01 UTC; meichtry
+Author: Andre Meichtry [aut, cre] (YOUR-ORCID-ID)
+Maintainer: Andre Meichtry <mcdr@zhaw.ch>
+URL: https://github.com/mcdr65/RegToMeanExample
