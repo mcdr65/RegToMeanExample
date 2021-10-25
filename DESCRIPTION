@@ -17,3 +17,4 @@ Packaged: 2021-10-20 07:13:01 UTC; meichtry
 Author: Andre Meichtry [aut, cre] (YOUR-ORCID-ID)
 Maintainer: Andre Meichtry <mcdr@zhaw.ch>
 URL: https://github.com/mcdr65/RegToMeanExample
+BugReports: https://github.com/mcdr65/RegToMeanExample/issues

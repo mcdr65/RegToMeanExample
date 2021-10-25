@@ -22,7 +22,7 @@ knit_theme$set("kellys")
  
 
 
-\title{Shrinkage and regression to the mean}
+\title{Shrinkage and regression to the mean }
 \author{André Meichtry}
 
 
