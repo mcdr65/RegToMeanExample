@@ -29,9 +29,7 @@
 ##' @export
 ##' @examples ##Assume a true change of -10 (on diastolic blood presssure)
 ##' DBP.RTM(TrueChange=-10)
-DBP.RTM <-
-  function(mu = 90, sigma = 8, r = .76, n = 1000, limit = 95, TrueChange = 0, show.plot = TRUE) ## Diastolic Blood Pressure-Regression to the mean
-  {
+DBP.RTM <-function(mu = 90, sigma = 8, r = .76, n = 1000, limit = 95, TrueChange = 0, show.plot = TRUE){
     muvec <- c(mu, mu + TrueChange)
     sigmavec <- c(sigma, sigma)
     Sigma <- matrix(c(
@@ -51,8 +49,6 @@ DBP.RTM <-
       abline(lm(X[, 2] ~ X[, 1]), col = "blue", lty = 1)
       abline(h = c(limit + TrueChange, mean(X2[, 2])), v = c(limit, mean(X2[, 1])), lty = c(1, 2), col = c(1, 2))
     }
-
-
     results <- list(
       overall = psych::describe(X),
       extremgroup = psych::describe(X2),
@@ -64,5 +60,5 @@ DBP.RTM <-
       dataall = X,
       dataextrem = X2
     )
-    return(results)
+    #return(results)
   }
