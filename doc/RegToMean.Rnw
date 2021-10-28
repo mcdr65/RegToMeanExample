@@ -1,0 +1,276 @@
+\documentclass{scrartcl}
+\usepackage{preamb}
+\usepackage{texab}
+\pagestyle{scrheadings}
+\ifoot{Meichtry, \today}
+
+% \VignetteIndexEntry{Regression to the mean}
+% \VignetteEngine{knitr::knitr}
+
+
+
+<<setup, cache=FALSE, include=FALSE>>=
+# set up some global options for the document
+options(width = 120, show.signif.stars = FALSE)
+# also set up global chunk options
+library(knitr)
+opts_chunk$set(dev="pdf",echo=FALSE,fig.path="figures/",fig.align="center",
+               background="transparent",out.width="0.49\\linewidth",warning=FALSE,message=FALSE,tidy=TRUE)
+knit_theme$get()##choose a theme
+knit_theme$set("kellys")
+@ 
+ 
+
+
+\title{Shrinkage and regression to the mean}
+\author{André Meichtry}
+
+
+
+\begin{document}
+\selectlanguage{english}
+
+
+\maketitle
+%\tableofcontents
+\scriptsize
+
+\dictum[Stephen Senn]{Shrinkage of results can be seen to be a necessary fact of life.}
+
+\normalsize
+
+
+
+
+\section{Shrinkage is a fact of life}
+\label{sec:example}
+
+Assume true diastolic blood pressure, $\tau$, at baseline is measured
+with error $\epsilon$ so that
+\begin{equation}
+  \label{eq:4}
+  X=\tau+\epsilon
+\end{equation}
+is the \emph{observed} blood pressure. Let the \emph{true} mean
+difference between patients be $\Delta$ and the \emph{observed} mean
+difference $D$, then the expectation of $D$ is
+\begin{equation}
+  \label{eq:6}
+  \Erw(D\mid\Delta=\delta)=\delta,
+\end{equation}
+that is, we have ``classical''
+  \emph{unbiasedness}, since $\beta_{D\mid
+    \Delta}=\frac{\Cov(\Delta,D)}{\sigma^2_\Delta}=1$.
+  
+  However, the
+contrary is not true. We have for the expectation of $\Delta$, given
+an observed difference $d$,
+\begin{equation}
+  \label{eq:7}
+  \abs{\Erw(\Delta\mid D=d)}< \abs{d},
+\end{equation}
+since $\beta_{\Delta\mid D}=\frac{\Cov(\Delta,D)}{\sigma^2_D}< 1$, and 
+we have \emph{regression to the mean}\footnote{\paragraph{In a Bayesian
+    approach,} shrinking is \emph{natural} and we have \emph{inverse
+    unbiasedness}. Most bayesians are rather unconcerned about
+  unbiasedness (at least in the formal sampling-theory sense above) of
+  their estimates. For example, Gelman et al (1995) write: ``From a
+  Bayesian perspective, the principle of unbiasedness is reasonable in
+  the limit of large samples, but otherwise it is potentially
+  misleading. Unbiasedness as conventionally understood is not a
+  necessary property of good inferences''. Assume without loss of
+  generality $\Erw(\Delta)=0$ and $\wh{\Delta}$ an unbiased estimate
+  of a given effect $\Delta$ and $\wh{\Delta}_{shrunk}$ a shrunk
+  estimate. Although $\wh{\Delta}_{shrunk}$ is not unbiased in the
+  classic forward sense, $\Erw(\wh{\Delta}_{shrunk} \mid
+  \Delta=\delta)\neq \delta$ it is unbiased in the Bayesian backward
+  sense: $\Erw(\Delta\mid \wh{\Delta}_{shrunk}=\wh{\delta}_{shrunk})=
+  \wh{\delta}_{shrunk}$.}.
+
+
+
+
+<<echo=FALSE,results="hide">>= 
+n <- 1000
+mu <- 90
+delta<-10
+sT <- 8
+sE <- 5
+set.seed(4)
+T1 <- rnorm(n/2,mu,sT)
+T2 <- rnorm(n/2,mu+delta,sT)
+X1 <- rnorm(n/2,T1,sE)
+X2 <- rnorm(n/2,T2,sE)
+Delta <- T2-T1
+D <- X2-X1
+(reliab <- sT^2/(sT^2+sE^2))
+cor(T1,X1)
+@ 
+
+\begin{figure}[H]
+  \centering
+ 
+<<fig.show="hold">>= 
+matplot(rbind(mean(T2)-mean(T1),Delta),type="l",axes=FALSE,main=expression(paste("E[D|",Delta,"=",delta,"]=",delta)),ylab="quantity of interest")
+axis(1,1:2,c(expression(paste("True(",Delta,")",sep="")),"Observed (D)"),col.axis="blue")
+axis(2)
+matplot(rbind(Delta,D),type="l",axes=FALSE,main=expression(paste("E[",Delta,"|D=d]<d")),ylab="quantity of interest")
+axis(1,1:2,c(expression(paste("True(",Delta,")",sep="")),"Observed (D)"),col.axis="blue")
+axis(2)
+plot(Delta,D,xlab=expression(Delta),cex=.2)
+abline(lm(D~Delta),col="red")
+lines(D,D,lty=2,col="blue")
+plot(D,Delta,ylab=expression(Delta),cex=.2)
+abline(lm(Delta~D),col="red")
+lines(Delta,Delta,lty=2,col="blue")
+@ 
+ 
+  
+  \caption{Shrinkage as a fact of life}
+\end{figure}
+
+
+
+
+\paragraph{Reliability as upper bound}
+\label{sec:reliability-as-upper}
+
+
+The maximal possible correlation between $\Delta$ and $D$ is
+$\sqrt{rel_D}$.
+
+
+% <<echo=TRUE>>=
+% cor(Delta,D)
+% sqrt(reliab)
+%@
+
+\section{Placebo as a statistical phenomenon}
+
+
+Placebo effects can often be interpreted as a purely
+      statistical -- not a psychological -- phenomenon.
+
+
+\paragraph{Assuming no true change.}
+\label{sec:assuming-no-true}
+
+
+We simulate correlated pre-post diastolic blood pressure data  assuming \emph{no change}
+from baseline to follow-up: simulations from parameters: $\rho_{BL,FU}=0.76,
+      \mu_{BL}=\mu_{FU}=90, \sigma_{BL}=\sigma_{FU}=8$. Then let us
+      look at the \emph{subgroup} of ``hypertensive at baseline''
+      only. We have regression to the mean, since
+ $\beta_{FU \mid BL}=\frac{\sigma_{FU,BL}}{\sigma^2_{BL}}=r\leq1$.
+      
+      
+
+<<fig.show="hold",results="hide">>=
+n<-1000
+library(RegToMeanExample)
+DBP.RTM(n=n,show.plot=FALSE)[c(1:5,7)]
+@      
+
+
+  \begin{figure}[H]
+    \centering
+
+<<fig.show="hold">>=
+b <- DBP.RTM(n=n,show.plot=TRUE)
+@ 
+      \caption{Simulation of diastolic blood pressure data. Simulations from parameters: $\rho_{BL,FU}=0.76,
+      \mu_{BL}=\mu_{FU}=90, \sigma_{BL}=\sigma_{FU}=8$. Left panel:
+      Baseline versus Follow-up for diastolic blood pressure: no
+      change in the mean. Right panel: Baseline versus Follow-up for
+      ``hypertensive at baseline'' only. We observe an apparent change
+      due to regression to the mean (Solid line: Regression of
+      follow-up on baseline-measure (that is, by fixing
+      baseline)). Dashed lines: mean values and equality
+      lines.}
+    
+  \end{figure}
+
+\normalsize  
+
+\newpage
+\paragraph{Extreme case: $\rho$=0}~
+
+<<fig.show="hold",results="hide">>=
+DBP.RTM(n=n,r=0,show.plot=TRUE)[c(1:5,7)]
+@ 
+
+\normalsize
+
+
+
+\paragraph{Including a true change of -10 and $\rho$=.8}~
+
+<<fig.show="hold",results="hide">>=
+DBP.RTM(n=n,r=0.8,TrueChange=-10,show.plot=TRUE)[c(1:5,7)]
+@ 
+
+
+
+\newpage
+\paragraph{Including a true change of -10 and $\rho$=.4}~
+
+<<fig.show="hold",results="hide">>=
+DBP.RTM(n=n,r=.4,TrueChange=-10,show.plot=TRUE)[c(1:5,7)]
+@ 
+
+
+\paragraph{$\rho$=1 (Perfect reliability)}~
+\label{sec:two-extreme-cases}
+
+<<fig.show="hold",results="hide">>=
+DBP.RTM(n=n,r=1,TrueChange=0,show.plot=TRUE)[c(1:5,7)]
+@ 
+
+
+
+\newpage
+\appendix
+
+\normalsize
+
+\section{Maths}
+\label{sec:important-relations}
+
+The conditional expected value of $Y$, given that $X$ is $t$ standard
+deviations above its mean (and that includes the case where it is below its mean,
+when $t < 0$), is $\rho$ standard deviations above the mean of $Y$ .
+
+Since $\abs{\rho}\leq 1$, $Y$
+is no farther from the mean than $X$ is, as measured in the number of standard
+deviations. Hence, if $0 \leq \rho < 1$, then $(X, Y)$ shows regression toward the mean.
+
+\begin{equation}
+  \label{eq:1}
+  \boxed{\frac{\Erw(Y\mid X)-\Erw(Y)}{\sigma_Y}=\rho\frac{X-\Erw(X)}{\sigma_X}},
+\end{equation}
+
+that is, $z_{Y\mid X}=\rho z_x$, leading to $z_{Y\mid X}-z_X=(\rho-1)z_x$. The amount of RTM
+is 
+\begin{equation}
+  \label{eq:2}
+  \boxed{\abs{z_{Y\mid X}-z_x}=(1-\rho)z_x}.
+\end{equation}
+
+
+The estimated fraction of RTM is given by $1-\rho$, the fraction of
+variance that is due to within-subject variability. This quantity represents
+\emph{unreliability}.
+
+
+
+% \paragraph{General definition.} Let $X$, $Y$ be random variables with identical marginal
+% distributions with mean $\mu$. In this formalization, the bivariate distribution of
+% $X$ and $Y$ is said to exhibit reversion toward the mean if, for every number $c$,
+% we have
+% \begin{align}
+%   \Erw(Y\mid X>c)&< \Erw(X\mid X>c)\\
+%   \Erw(Y\mid X<c)&> \Erw(X\mid X<c)\\\nonumber
+% \end{align}
+
+\end{document}
+
