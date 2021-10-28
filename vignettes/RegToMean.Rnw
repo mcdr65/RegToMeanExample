@@ -59,7 +59,9 @@ difference $D$, then the expectation of $D$ is
   \Erw(D\mid\Delta=\delta)=\delta,
 \end{equation}
 that is, we have ``classical''
-  \emph{unbiasedness}, since $\beta_{D\mid \Delta}=\frac{\Cov(\Delta,D)}{\sigma^2_\Delta}=1$
+  \emph{unbiasedness}, since $\beta_{D\mid
+    \Delta}=\frac{\Cov(\Delta,D)}{\sigma^2_\Delta}=1$.
+  
   However, the
 contrary is not true. We have for the expectation of $\Delta$, given
 an observed difference $d$,
