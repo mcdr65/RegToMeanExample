@@ -1,34 +1,87 @@
-\documentclass{scrartcl}
-\usepackage{preamb}
+%\VignetteIndexEntry{RegToMean}
+%\VignetteEngine{R.rsp::tex}
+
+
+\documentclass{scrartcl}\usepackage[]{graphicx}\usepackage[]{color}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.882, 0.878, 0.898}
+\makeatletter
+\@ifundefined{AddToHook}{}{\AddToHook{package/xcolor/after}{\definecolor{fgcolor}{rgb}{0.882, 0.878, 0.898}}}
+\makeatother
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.82,0.78,0.62}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.82,0.78,0.62}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.404,0.408,0.42}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0.882,0.878,0.898}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.882,0.878,0.898}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.384,0.675,0.808}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.902,0.675,0.196}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.812,0.522,0.388}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.733,0.388,0.812}{#1}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\makeatletter
+\@ifundefined{AddToHook}{}{\AddToHook{package/xcolor/after}{
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+}}
+\makeatother
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+% \usepackage{preamb}
 \usepackage{texab}
-\pagestyle{scrheadings}
-\ifoot{Meichtry, \today}
+% \pagestyle{scrheadings}
+% \ifoot{Meichtry, \today}
 
 % \VignetteIndexEntry{Regression to the mean}
 % \VignetteEngine{knitr::knitr}
 
 
 
-<<setup, cache=FALSE, include=FALSE>>=
-# set up some global options for the document
-options(width = 120, show.signif.stars = FALSE)
-# also set up global chunk options
-library(knitr)
-opts_chunk$set(dev="pdf",echo=FALSE,fig.path="figures/",fig.align="center",
-               background="transparent",out.width="0.49\\linewidth",warning=FALSE,message=FALSE,tidy=TRUE)
-knit_theme$get()##choose a theme
-knit_theme$set("kellys")
-@ 
+
  
 
 
 \title{Shrinkage and regression to the mean}
 \author{André Meichtry}
-
-
-
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
-\selectlanguage{english}
 
 
 \maketitle
@@ -90,40 +143,23 @@ we have \emph{regression to the mean}\footnote{\paragraph{In a Bayesian
 
 
 
-<<echo=FALSE,results="hide">>= 
-n <- 1000
-mu <- 90
-delta<-10
-sT <- 8
-sE <- 5
-set.seed(4)
-T1 <- rnorm(n/2,mu,sT)
-T2 <- rnorm(n/2,mu+delta,sT)
-X1 <- rnorm(n/2,T1,sE)
-X2 <- rnorm(n/2,T2,sE)
-Delta <- T2-T1
-D <- X2-X1
-(reliab <- sT^2/(sT^2+sE^2))
-cor(T1,X1)
-@ 
 
-\begin{figure}[H]
+
+\begin{figure}
   \centering
  
-<<fig.show="hold">>= 
-matplot(rbind(mean(T2)-mean(T1),Delta),type="l",axes=FALSE,main=expression(paste("E[D|",Delta,"=",delta,"]=",delta)),ylab="quantity of interest")
-axis(1,1:2,c(expression(paste("True(",Delta,")",sep="")),"Observed (D)"),col.axis="blue")
-axis(2)
-matplot(rbind(Delta,D),type="l",axes=FALSE,main=expression(paste("E[",Delta,"|D=d]<d")),ylab="quantity of interest")
-axis(1,1:2,c(expression(paste("True(",Delta,")",sep="")),"Observed (D)"),col.axis="blue")
-axis(2)
-plot(Delta,D,xlab=expression(Delta),cex=.2)
-abline(lm(D~Delta),col="red")
-lines(D,D,lty=2,col="blue")
-plot(D,Delta,ylab=expression(Delta),cex=.2)
-abline(lm(Delta~D),col="red")
-lines(Delta,Delta,lty=2,col="blue")
-@ 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.165, 0.169, 0.184}\color{fgcolor}
+
+{\centering \includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-2-1} 
+\includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-2-2} 
+\includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-2-3} 
+\includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-2-4} 
+
+}
+
+
+\end{knitrout}
  
   
   \caption{Shrinkage as a fact of life}
@@ -165,19 +201,22 @@ from baseline to follow-up: simulations from parameters: $\rho_{BL,FU}=0.76,
       
       
 
-<<fig.show="hold",results="hide">>=
-n<-1000
-library(RegToMeanExample)
-DBP.RTM(n=n,show.plot=FALSE)[c(1:5,7)]
-@      
 
 
-  \begin{figure}[H]
+
+  \begin{figure}
     \centering
 
-<<fig.show="hold">>=
-b <- DBP.RTM(n=n,show.plot=TRUE)
-@ 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.165, 0.169, 0.184}\color{fgcolor}
+
+{\centering \includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-4-1} 
+\includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-4-2} 
+
+}
+
+
+\end{knitrout}
       \caption{Simulation of diastolic blood pressure data. Simulations from parameters: $\rho_{BL,FU}=0.76,
       \mu_{BL}=\mu_{FU}=90, \sigma_{BL}=\sigma_{FU}=8$. Left panel:
       Baseline versus Follow-up for diastolic blood pressure: no
@@ -195,9 +234,16 @@ b <- DBP.RTM(n=n,show.plot=TRUE)
 \newpage
 \paragraph{Extreme case: $\rho$=0}~
 
-<<fig.show="hold",results="hide">>=
-DBP.RTM(n=n,r=0,show.plot=TRUE)[c(1:5,7)]
-@ 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.165, 0.169, 0.184}\color{fgcolor}
+
+{\centering \includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-5-1} 
+\includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-5-2} 
+
+}
+
+
+\end{knitrout}
 
 \normalsize
 
@@ -205,26 +251,47 @@ DBP.RTM(n=n,r=0,show.plot=TRUE)[c(1:5,7)]
 
 \paragraph{Including a true change of -10 and $\rho$=.8}~
 
-<<fig.show="hold",results="hide">>=
-DBP.RTM(n=n,r=0.8,TrueChange=-10,show.plot=TRUE)[c(1:5,7)]
-@ 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.165, 0.169, 0.184}\color{fgcolor}
+
+{\centering \includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-6-1} 
+\includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-6-2} 
+
+}
+
+
+\end{knitrout}
 
 
 
 \newpage
 \paragraph{Including a true change of -10 and $\rho$=.4}~
 
-<<fig.show="hold",results="hide">>=
-DBP.RTM(n=n,r=.4,TrueChange=-10,show.plot=TRUE)[c(1:5,7)]
-@ 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.165, 0.169, 0.184}\color{fgcolor}
+
+{\centering \includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-7-1} 
+\includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-7-2} 
+
+}
+
+
+\end{knitrout}
 
 
 \paragraph{$\rho$=1 (Perfect reliability)}~
 \label{sec:two-extreme-cases}
 
-<<fig.show="hold",results="hide">>=
-DBP.RTM(n=n,r=1,TrueChange=0,show.plot=TRUE)[c(1:5,7)]
-@ 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.165, 0.169, 0.184}\color{fgcolor}
+
+{\centering \includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-8-1} 
+\includegraphics[width=0.49\linewidth]{figures/unnamed-chunk-8-2} 
+
+}
+
+
+\end{knitrout}
 
 
 
@@ -238,7 +305,7 @@ DBP.RTM(n=n,r=1,TrueChange=0,show.plot=TRUE)[c(1:5,7)]
 
 The conditional expected value of $Y$, given that $X$ is $t$ standard
 deviations above its mean (and that includes the case where it is below its mean,
-when $t < 0$), is $\rho$ standard deviations above the mean of $Y$ .
+when $t < 0$), is $\rho t$ standard deviations above the mean of $Y$ .
 
 Since $\abs{\rho}\leq 1$, $Y$
 is no farther from the mean than $X$ is, as measured in the number of standard
