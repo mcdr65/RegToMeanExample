@@ -12,9 +12,13 @@ Load package, check the main function and look at the vignette
 
 
 ```{r }
-library(RegToMean)
+library(RegToMeanExample)
 DBP.RTM()
-vignette("RegToMean")
 
+
+Check the vignette
+
+```{r }
+vignette("RegToMean")
 ```
 
