@@ -14,9 +14,10 @@ Load package, check the main function and look at the vignette
 ```{r }
 library(RegToMeanExample)
 DBP.RTM()
+```
 
+Check the vignette with
 
-Check the vignette
 
 ```{r }
 vignette("RegToMean")
