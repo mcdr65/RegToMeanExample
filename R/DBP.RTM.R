@@ -6,6 +6,7 @@
 ##' @param limit Limit for hypertension
 ##' @param TrueChange True Change from Baseline. Default is zero.
 ##' @param show.plot Add plot, default=TRUE
+##' @param show.out print results, default=FALSE
 ##' @return A list with
 ##' \itemize{
 ##' \item plot showing equality line and the linear regression slope for all observations
@@ -29,7 +30,7 @@
 ##' @export
 ##' @examples ##Assume a true change of -10 (on diastolic blood presssure)
 ##' DBP.RTM(TrueChange=-10)
-DBP.RTM <-function(mu = 90, sigma = 8, r = .76, n = 1000, limit = 95, TrueChange = 0, show.plot = TRUE){
+DBP.RTM <-function(mu = 90, sigma = 8, r = .76, n = 1000, limit = 95, TrueChange = 0, show.plot = TRUE,show.out=FALSE) {
     muvec <- c(mu, mu + TrueChange)
     sigmavec <- c(sigma, sigma)
     Sigma <- matrix(c(
@@ -49,7 +50,7 @@ DBP.RTM <-function(mu = 90, sigma = 8, r = .76, n = 1000, limit = 95, TrueChange
       abline(lm(X[, 2] ~ X[, 1]), col = "blue", lty = 1)
       abline(h = c(limit + TrueChange, mean(X2[, 2])), v = c(limit, mean(X2[, 1])), lty = c(1, 2), col = c(1, 2))
     }
-    results <- list(
+    out <- list(
       overall = psych::describe(X),
       extremgroup = psych::describe(X2),
       correlation = r,
@@ -60,5 +61,7 @@ DBP.RTM <-function(mu = 90, sigma = 8, r = .76, n = 1000, limit = 95, TrueChange
       dataall = X,
       dataextrem = X2
     )
-    #return(results)
+    if(show.out==TRUE)
+        return(out)
   }
+

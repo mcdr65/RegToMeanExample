@@ -11,10 +11,16 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: MASS, psych
 VignetteBuilder: R.rsp
-Suggests: rmarkdown, knitr, R.rsp
+Suggests: 
+    rmarkdown,
+    knitr,
+    R.rsp,
+    testthat (>= 3.0.0)
 NeedsCompilation: no
 Packaged: 2021-10-20 07:13:01 UTC; meichtry
 Author: Andre Meichtry [aut, cre] (YOUR-ORCID-ID)
 Maintainer: Andre Meichtry <andre.meichtry@bfh.ch>
-URL: https://github.com/mcdr65/RegToMeanExample
+URL: https://github.com/mcdr65/RegToMeanExample,
+    https://mcdr65.github.io/RegToMeanExample/
 BugReports: https://github.com/mcdr65/RegToMeanExample/issues
+Config/testthat/edition: 3

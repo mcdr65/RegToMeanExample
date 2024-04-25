@@ -11,7 +11,8 @@ DBP.RTM(
   n = 1000,
   limit = 95,
   TrueChange = 0,
-  show.plot = TRUE
+  show.plot = TRUE,
+  show.out = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ DBP.RTM(
 \item{TrueChange}{True Change from Baseline. Default is zero.}
 
 \item{show.plot}{Add plot, default=TRUE}
+
+\item{show.out}{print results, default=FALSE}
 }
 \value{
 A list with
