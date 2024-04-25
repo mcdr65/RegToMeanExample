@@ -33,6 +33,7 @@ devtools::install_github("mcdr65/RegToMeanExample")
 ## Example
 
 You can load the package and play with the main (the only) function:
+
 ```{r example}
 library(RegToMeanExample)
 DBP.RTM()
