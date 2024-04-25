@@ -1,25 +1,32 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # RegToMeanExample
-Visualisation Regression to the Mean
 
+<!-- badges: start -->
 
-Install with
+<!-- badges: end -->
 
-```{r eval=FALSE}
-devtools::install_github("mcdr65/RegToMeanExample",build_vignettes=TRUE)
+The goal of RegToMeanExample is the visualisation of Regression to the
+Mean
+
+## Installation
+
+You can install the development version of RegToMeanExample from
+[GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("mcdr65/RegToMeanExample")
 ```
 
-Load package, check the main function and look at the vignette
+## Example
 
+This is a basic example which shows you how to solve a common problem:
 
-```{r }
+``` r
 library(RegToMeanExample)
 DBP.RTM()
 ```
 
-Check the vignette with
-
-
-```{r }
-vignette("RegToMean")
-```
-
+<img src="man/figures/README-example-1.png" width="100%" /><img src="man/figures/README-example-2.png" width="100%" />
