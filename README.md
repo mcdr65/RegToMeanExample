@@ -22,7 +22,7 @@ devtools::install_github("mcdr65/RegToMeanExample")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+You can load the package and play with the main (the only) function:
 
 ``` r
 library(RegToMeanExample)
