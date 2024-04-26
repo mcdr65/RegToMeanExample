@@ -13,6 +13,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+
+
+
+
 # RegToMeanExample
 
 <!-- badges: start -->
@@ -35,6 +39,8 @@ devtools::install_github("mcdr65/RegToMeanExample")
 You can load the package and play with the main (and the only) function:
 
 ```{r example}
+#| fig-width: 6
+#| fig-height: 6
 library(RegToMeanExample)
 args(DBP.RTM)
 DBP.RTM()
