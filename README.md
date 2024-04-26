@@ -22,10 +22,14 @@ devtools::install_github("mcdr65/RegToMeanExample")
 
 ## Example
 
-You can load the package and play with the main (the only) function:
+You can load the package and play with the main (and the only) function:
 
 ``` r
 library(RegToMeanExample)
+args(DBP.RTM)
+#> function (mu = 90, sigma = 8, r = 0.76, n = 1000, limit = 95, 
+#>     TrueChange = 0, show.plot = TRUE, show.out = FALSE) 
+#> NULL
 DBP.RTM()
 ```
 
